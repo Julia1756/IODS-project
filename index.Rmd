@@ -13,6 +13,12 @@ output:
 
 ***
 
+install.packages("usethis")
+
+usethis::create_github_token()
+
+gitcreds::gitcreds_set()
+
 # Introduction to Open Data Science - Course Project
 
 ```{r child = "chapter1.Rmd"}
