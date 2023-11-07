@@ -3,7 +3,7 @@
 
 *Write a short description about the course and add a link to your GitHub repository here. This is an R Markdown (.Rmd) file so you should use R Markdown syntax.*
 
-I am a phD student working on rare kidney diseases and immunology. I have followed some specific R courses rather for medical studies which allowed to apply the newly learned R functions for my research work. I would like to broaden my knowledge in the use of R which are not specifically related to my topic. The content of the course looked to me completely new and interesting so I am happy to learn more about open science, open data,  data science. I expect to get insight in the coding, the analysis and the interpretation of of regression and model validation, Data wrangling, clustering and classification...
+I am a phD student working on rare kidney diseases and immunology. I have followed some specific R courses rather for medical studies which allowed to apply the newly learned R functions for my research work. I would like to broaden my knowledge in the use of R which are not specifically related to my topic. The content of the course looked to me completely new and interesting so I am happy to learn more about open science, open data,  data science. I expect to get insight in the coding, the analysis and the interpretation of of regression and model validation, Data wrangling, clustering and classification.
 
 https://github.com/Julia1756/IODS-project.git
 
