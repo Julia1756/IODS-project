@@ -1,4 +1,4 @@
-# Insert chapter 2 title here
+# Chapter 2: Regression and model validation
 
 *Describe the work you have done this week and summarize your learning.*
 
@@ -7,7 +7,94 @@
 - Assume the reader has no previous knowledge of your data or the more advanced methods you are using.
 
 ```{r}
-date()
+
+#1 reading the data 
+student2014 <- read.csv("data/learning2014.csv",header = TRUE,sep=",")
+
+#1 explore the dimension of the data
+dim(data)
+
+#1 explore the structure of the data
+str(data)
+```
+The data consist of 166 observations of 7 variables. The variable "gender" is in character formats. The variables "Age", "Attitude","Points" are in integer formats. The variables "deep", "stra" and "surf" are in numerical formats. 
+The variables, “gender” and “age” give basic information about the different individuals.The variable “attitude” tells us about the attitude of the studied individuals. The variables “deep”, “stra” and “surf” indicates whether the individual relied on deep, surface and strategic learning. The variable “points” corresponds to the points a person got  a statistics course exam
+
+install.packages("GGally")
+install.packages("ggplot2")
+
+```{r}
+#2  create a plot matrix after install.packages("GGally"), install.packages("ggplot2")
+
+library(ggplot2)
+library(GGally)
+ggpairs(student2014, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
+
 ```
 
-Here we go again...
+```{r}
+#2  summary of the fitted model
+summary(student2014)
+```
+### comment and interpret the results.Explain and interpret the statistical test related to the model parameters.
+
+Except the "age" , the variables look normally distributed.  We can see that there are more women than men in the study.
+
+The variables which show significant correlation with each others are the following: 
+- "attitude" is positively correlated with "exam points both in men and women
+- "attitude" is negatively correlated with "surf" only in men
+- "deep"is negatively correlated with "surf" only in men
+
+### Choose three variables as explanatory variables and fit a regression model where exam points is the target (dependent, outcome) variable. 
+
+I choose the variables "attitude","stra" and "surf" which show the highest correlation value with the variable "points"
+
+
+```{r}
+#3 fit a regression model where exam points is the target (dependent, outcome) variable
+model <- lm(Points ~ Attitude + stra + surf, data = student2014)
+summary(model)
+```
+The variables “stra” and “surf” did not have statistically significant effect against points. However, the variable "Attitude" showed a significant effect against "points" do let’s remove them.
+The adjusted R-squared of the model  was 0.19, indicating that 19 % of the variation in exam points was explained by the explanatory variables. 
+
+
+###  If an explanatory variable in your model does not have a statistically significant relationship with the target variable, remove the variable from the model and fit the model again without it
+
+I removed "stra" and "surf" from the explanatory variables. 
+
+```{r}
+#3 remove the variable from the model and fit the model again without it
+model2 <- lm(Points ~ Attitude, data = student2014)
+
+
+#4 summary of your fitted model
+summary(model2)
+```
+
+The multiple R-squared of the model  was 0.19, showing that only 19 % of the variation in  "points" was explained by attitude.
+
+```{r}
+#5 Produce the following diagnostic plots: Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage
+
+par(mfrow = c(2,2))
+plot(model2, which = c(1,2,5))
+```
+
+### Explain the assumptions of the model 
+
+The model allows to makes the 4 main  assumptions:
+
+- Linear relationship: The explanatory variable X and the dependent variable Y show a linear relationship.
+- independence of residuals: The residuals should be independent. 
+-normal distribution of residuals : the observations look normally distributed around the fitted line 
+- Equal variance of residuals: the distance between observations from the fitted line should be the same on the left and right sides
+
+### Interpret the validity of those assumptions based on the diagnostic plots 
+
+
+- Linear relationship: We observe a linear relationship between the variable X and Y according to the plot of residuals VS fitted values .
+- independence of residuals: Observations are independent of each other.
+- normal distribution of residuals : the observations look normally distributed according to the Q-Q plot  
+- Equal variance of residuals: the variance of the residual is the same for each value of the dependent variable,indicating that the data is in homoscedasticity. 
+
