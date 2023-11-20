@@ -1,0 +1,173 @@
+---
+title: "Chapter3"
+author: "Julia ROQUIGNY"
+date: "2023-11-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r cars}
+#2 reading the data 
+alc <- read.csv("data/alc.csv",header = TRUE,sep=",")
+
+
+#2  structure of the data
+str(alc)
+colnames(alc)
+
+```
+
+The data consist of 370 observations of 36 variables. 
+
+#3 hypothesis 
+I choose the variables "school",sex","address", "Pstatus" to investigate whether
+the school, the gender, the home address type, the parent's cohabitation status
+affect the low/high alcohol consumption. 
+I hypothesize that man, people studying in one of the two school, living in urban area,  with parents apart, drink more alcohol than women, people studying in the other school, living in rural areas, with parents together, respectively.  
+
+install.packages("ggplot")
+```{r}
+#Numerically and graphically explore the distributions of your chosen variables and their relationships with alcohol consumption
+
+library(dplyr); library(ggplot2)
+#BARPLOTS
+par(mfrow = c(2,2))
+
+barplot(table(alc$sex),main ="sex")
+barplot(table(alc$address),main ="address")
+barplot(table(alc$school),main ="School")
+barplot(table(alc$Pstatus),main ="Pstatus")
+
+# workday & weekend alcohol use  by sex 
+library(ggplot2)
+g1 <- ggplot(alc, aes(x = sex, y = Dalc))
+g2 <- ggplot(alc, aes(x = sex, y = Walc))
+g1 + geom_boxplot() + ylab("workday alcohol use grade")
+g2 + geom_boxplot() + ylab("week-end alcohol use grade")
+
+# workday & weekend  alcohol use  by school 
+g3<- ggplot(data = alc, aes(x = school,y=Dalc))
+g4<- ggplot(data = alc, aes(x = school,y=Walc))
+
+g3 + geom_boxplot() + ylab("workday alcohol use grade")
+g4 + geom_boxplot() + ylab("week-end alcohol use grade")
+
+# workday & weekend  alcohol use  by school 
+g5<- ggplot(data = alc, aes(x = address,y=Dalc))
+g6<- ggplot(data = alc, aes(x = address,y=Walc))
+g5 + geom_boxplot() + ylab("workday alcohol use grade")
+g6 + geom_boxplot() + ylab("week-end alcohol use grade")
+
+
+```
+
+```{r}
+
+#4 
+library(dplyr); library(ggplot2)
+
+## define a new column alc_use by combining weekday and weekend alcohol use
+alc <- mutate(alc, alc_use = (Dalc + Walc) / 2)
+
+## define a new logical column 'high_use'
+alc <- mutate(alc, high_use = alc_use > 2)
+
+## initialize a plot of 'high_use'
+g7 <- ggplot(data = alc, aes(x=high_use))+geom_bar()
+
+## draw a bar plot of high_use by sex, address, Pstatus , school
+g7 + facet_wrap("sex")
+g7 + facet_wrap("address")
+g7 + facet_wrap("Pstatus")
+g7 + facet_wrap("school")
+
+
+## proportion of high_use by sex, address, Pstatus , school
+alc %>% group_by(sex,high_use) %>% summarise(count = n())%>% mutate(count / sum(count))
+alc %>% group_by(address,high_use) %>% summarise(count = n())%>% mutate(count / sum(count))
+alc %>% group_by(Pstatus,high_use) %>% summarise(count = n())%>% mutate(count / sum(count))
+alc %>% group_by(school,high_use) %>% summarise(count = n())%>% mutate(count / sum(count))
+
+
+```
+
+As I hypothesized, the percentage alcohol consumption during week-ends is particularly higher in male than in female.The high alcohol consumption is also higher in men than in women. Suprisingly, the percentage of high alcohol consumption  is  higher in students living in rural  vs urban areas. The students with parents apart did not show obvious  higher alcohol consumption compared to students with parents together. There was no difference of alcohol consumption between students from the two different schools. 
+
+
+```{r}
+#5 
+## logistic regression 
+glm.1=glm(high_use ~ sex+address+Pstatus+school, data = alc, family = "binomial")
+summary(glm.1)
+coef(glm.1)
+## compute odds ratios (OR)
+OR <- coef(glm.1) %>% exp
+
+## compute confidence intervals (CI)
+CI<-confint(glm.1)
+
+## print out the odds ratios with their confidence intervals
+cbind(OR, CI)
+
+```
+
+The logistic regression model predicted that male as sex is associated to high alcohol consumption in student. 
+For sex, "male" has a positive coefficient which indicate an increase of the odds ratio for sex of students.  
+For address, "urban" area had a negative coefficient which indicate a decrease of the odd ratio for address of students.
+The odds ratio of 2.52 for sex "Male" indicates that the odds of high alcohol use for males are approximately 2.52 times higher than for females.
+
+
+```{r}
+#6 
+## according to the logistic regression model, sex and address had a statistical relationship with high/low alcohol consumption
+library(dplyr)
+glm.2=glm(high_use ~ sex+address, data = alc, family = "binomial")
+summary(glm.2)
+
+
+# predict() the probability of high_use
+prob.2 <- predict(glm.2, type = "response")
+
+# predicted probabilities to "alc"
+alc <- mutate(alc, probability = prob.2)
+
+#  prediction of high_use
+alc <- mutate(alc, prediction = prob.2 > 0.5)
+
+# tabulate the target variable versus the predictions
+table(high_use = alc$high_use, prediction = alc$prediction)
+
+
+```
+```{r}
+
+# Bonus 
+
+library(caret)
+library(dplyr)
+library(glmnet)
+
+## Create a training control with 10-fold cross-validation
+ctrl <- trainControl(method = "cv", number = 10, verboseIter = TRUE)
+
+## convert high_use in factor
+alc$high_use <- as.factor(alc$high_use)
+
+## Perform cross-validated logistic regression
+cv_model <- train(high_use ~ ., data = alc, method = "glmnet", trControl = ctrl, family = "binomial")
+
+## Extract the cross-validated results
+cv_results <- data.frame(Iteration = rep(1:10, each = nrow(cv_model$resample)),
+                         Accuracy = cv_model$resample$Accuracy,
+                         Kappa = cv_model$resample$Kappa)
+
+## Display cross-validated results
+summary(cv_results)
+
+```
+
