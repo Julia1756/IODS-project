@@ -78,4 +78,5 @@ human <- inner_join(humandev, gender_mut, by = "country")
 dim(human) # 195 rows and 19 cols as supposed to 
 
 # save the data 
+
 write.csv(human,"D:/OneDrive/Documents/IODS-project/data/create_human.csv")
