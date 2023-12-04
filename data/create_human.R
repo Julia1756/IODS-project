@@ -21,4 +21,4 @@ last <- nrow(human.na) - 7
 human_ <- human.na[1:last, ]
 str(human_)
 
-write.csv(human.na,"D:/OneDrive/Documents/IODS-project/data/create_human.csv")
+write.csv(human_,"D:/OneDrive/Documents/IODS-project/data/create_human.csv")
