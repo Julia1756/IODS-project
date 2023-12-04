@@ -7,14 +7,18 @@ dim(human)
 #The dataset contains 195 observations and 19 variables. 
 
 #select variables 
-human<-human%>%select(Country,Edu2.FM,Labo.FM,Edu.Exp,Life.Exp,GNI,Mat.Mor,Ado.Birth,Parli.F)
+keep<-c("Country","Edu2.FM","Labo.FM","Edu.Exp","Life.Exp","GNI","Mat.Mor","Ado.Birth","Parli.F")
+human <- select(human, one_of(keep))
 
 #remove missing values
-human.na <- human[complete.cases(human), ]
+human.na <- filter(human,complete.cases(human))
 str(human.na)
 
-#Remove the observations which relate to regions instead of countries
-human.na <- filter(human.na,Country != "Europe and Central Asia" & Country != "East Asia and the Pacific"  & Country != "Latin America and the Caribbean" & Country != "Sub-Saharan Africa" & Country != "Arab States"  & Country != "World" & Country !="South Asia")
+# define the last indice we want to keep
+last <- nrow(human.na) - 7
 
-str(human.na)
+#Remove the observations which relate to regions instead of countries by choosing everything until the last 7 observations
+human_ <- human.na[1:last, ]
+str(human_)
+
 write.csv(human.na,"D:/OneDrive/Documents/IODS-project/data/create_human.csv")
