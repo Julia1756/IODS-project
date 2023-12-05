@@ -5,12 +5,12 @@ date: "2023-12-04"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r config, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r}
+```{r #1}
 #1 Move the country names to rownames (see Exercise 5.5). Show a graphical overview of the data and show summaries of the variables in the data. Describe and interpret the outputs, commenting on the distributions of the variables and the relationships between them
 
 human<-read.csv("D:/OneDrive/Documents/IODS-project/data/create_human.csv")
@@ -41,7 +41,7 @@ It shows that countries with long years of schooling , the Life expectancy at bi
 
 
 
-```{r}
+```{r #2}
 #2 Perform principal component analysis (PCA) on the raw (non-standardized) human data. Show the variability captured by the principal components. Draw a biplot displaying the observations by the first two principal components (PC1 coordinate in x-axis, PC2 coordinate in y-axis), along with arrows representing the original variables. 
 
 # perform principal component analysis (with the SVD method)
@@ -64,7 +64,7 @@ pc_lab<-paste0(names(pca_pr), " (", pca_pr, "%)")
 biplot(pca_human, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab[1], ylab =  pc_lab[2])
 
 ```
-```{r}
+```{r #3}
 #3 Standardize the variables in the human data and repeat the above analysis. Interpret the results of both analysis (with and without standardizing). Are the results different? Why or why not? Include captions (brief descriptions) in your plots where you describe the results by using not just your variable names, but the actual phenomena they relate to
 
 # standardize the variables
@@ -104,7 +104,7 @@ High incomes and education negatively negatively correlate with maternal mortali
 The % male and females in the labor force and in representatives in parliament  seem to not be associated with  incomes and education. 
 
 
-```{r}
+```{r #4}
 #5 Load the tea dataset and convert its character variables to factors
 
 tea <- read.csv("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/tea.csv", stringsAsFactors = TRUE)
@@ -116,10 +116,8 @@ head(tea)
 
 
 # column names to keep in the dataset
-keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
 
-# select the 'keep_columns' to create a new dataset
-tea_time <- select(tea, keep_columns)
+tea_time <-dplyr::select(tea, Tea, How, how, sugar, where, lunch)
 
 # look at the summaries and structure of the data
 str(tea_time)
@@ -132,7 +130,7 @@ pivot_longer(tea_time, cols = everything()) %>%
 
 ```
 
-```{r}
+```{r #5}
 #Use Multiple Correspondence Analysis (MCA) on the tea data (or on just certain columns of the data, it is up to you!). Interpret the results of the MCA and draw at least the variable biplot of the analysis. You can also explore other plotting options for MCA. Comment on the output of the plots
 
 
