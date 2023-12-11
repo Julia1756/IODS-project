@@ -26,9 +26,7 @@ RATS$Group <- factor(RATS$Group)
 RATS$ID <- factor(RATS$ID)
 
 #3 Convert the data sets to long form. Add a week variable to BPRS and a Time variable to RATS.
-BPRSL <-  pivot_longer(BPRS, cols = -c(treatment, subject),names_to = "weeks", values_to = "bprs") %>%arrange(weeks) 
-
-BPRSL <-  BPRSL %>% mutate(week = as.integer(substr(weeks,5,5)))
+BPRSL <-  pivot_longer(BPRS, cols = -c(treatment, subject),names_to = "weeks", values_to = "bprs") %>%mutate(week = as.integer(substr(weeks,5,6)))%>%arrange(weeks)
 
 RATSL <-  pivot_longer(RATS, cols = -c(Group, ID),names_to = "WD", values_to = "Weight") %>%arrange(WD) 
 
