@@ -35,12 +35,19 @@ RATSL <-  pivot_longer(RATS, cols = -c(Group, ID),names_to = "WD", values_to = "
 RATSL <-  RATSL %>% mutate(Time = as.integer(substr(WD,3,4)))
 
 #4  new data sets 
+glimpse(BPRSL)
 str(BPRSL)
 head(BPRSL)
 summary(BPRSL)
 View(BPRSL)
 
+glimpse(RATSL)
 str(RATSL)
 head(RATSL)
 summary(RATSL)
 View(RATSL)
+
+#SAVE DATA
+
+write.csv(BPRSL,"D:/OneDrive/Documents/IODS-project/data/BPRSL.csv")
+write.csv(RATSL,"D:/OneDrive/Documents/IODS-project/data/RATSL.csv")
