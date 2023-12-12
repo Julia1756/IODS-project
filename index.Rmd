@@ -22,25 +22,42 @@ gitcreds::gitcreds_set()
 # Introduction to Open Data Science - Course Project
 
 ```{r chapter 1, child = "chapter1.Rmd"}
+Chapter 1 
 
 ```
   
 ***
-  
+# Chapter 2 
+
 ```{r chapter 2, child = "chapter2.Rmd"}
+
+
 ```
 
 ***
+# Chapter 3 
 ```{r chapter 3, child = "chapter3.Rmd"}
 
+Chapter 3
 ```
 
 ***
+# Chapter 4 
 ```{r chapter 4, child = "chapter4.Rmd"}
 
+Chapter 4
 ```
 
 ***
+# Chapter 5
+```{r chapter 5, child = "chapter5.Rmd"}
+Chapter 5 
+```
 
-(more chapters to be added similarly as we proceed with the course!)
+***
+# Chapter 6
+```{r chapter 6, child = "chapter6.Rmd"}
+Chapter 6 
+```
+
 
